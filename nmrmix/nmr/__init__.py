@@ -48,11 +48,14 @@ class SimpleCoupling(BaseModel):
 class SimpleSite(BaseModel):
     """
     isotope: specific isotope for NMR active atom
-    isotropic_chemical_shift: value in ppm for chemical shift. Converted to a list when coupled
-    multiplicity: Number of atoms responsible for this signal. Irrep in spin system
-    intensity: the relative signal intensity. Taken to be multiplicity but updated upon coupling
-    couple_flag: flag to determine if site has been coupled before. Present due to issues interfacing
-    mrsimulator with JAX
+    isotropic_chemical_shift: value in ppm for chemical shift. 
+    Converted to a list when coupled
+    multiplicity: Number of atoms responsible for this signal. 
+    Irrep in spin system
+    intensity: the relative signal intensity. Taken to be multiplicity 
+    but updated upon coupling
+    couple_flag: flag to determine if site has been coupled before. 
+    Present due to issues interfacing mrsimulator with JAX
     """
 
     isotope: str = "1H"
@@ -124,8 +127,8 @@ def Hz_to_ppm(Hz_val, carrier_frequency=500):
 
 def couple_SimpleSpinSystem(SimpleSpinSystem, carrier_frequency=500):
     """
-    Function to update isotropic_chemical_shift values in a site object to the list of shifts
-    expected in a coupled spin system
+    Function to update isotropic_chemical_shift values in a site object 
+    to the list of shifts expected in a coupled spin system
     """
     if len(SimpleSpinSystem.couplings) == 0:
         return
@@ -148,7 +151,7 @@ def couple_SimpleSpinSystem(SimpleSpinSystem, carrier_frequency=500):
                     i - (neighbor_count - 1) / 2 for i in range(neighbor_count + 1)
                 ]
 
-                if SimpleSpinSystem.sites[i].couple_flag == False:
+                if SimpleSpinSystem.sites[i].couple_flag is False:
                     updated_freqs = [delta + n * isotropic_j_ppm for n in centered_list]
                     SimpleSpinSystem.sites[i].set_flag(state=True)
                 else:
@@ -167,7 +170,8 @@ def couple_SimpleSpinSystem(SimpleSpinSystem, carrier_frequency=500):
 
 def parse_coupled_SimpleSpinSystem(SimpleSpinSystem):
     """
-    Systematically parses a spin system to obtain the frequencies of each signal and the associated signal instensity
+    Systematically parses a spin system to obtain the frequencies of each signal 
+    and the associated signal instensity
     """
     shifts = jnp.array([])
     couplings = []
