@@ -14,23 +14,10 @@ __maintainer__ = "Maxwell C. Venetos"
 __status__ = "Beta"
 __version__ = "0.1"
 
-import pandas as pd
-import pickle
 import numpyro
 import numpyro.distributions as dist
-from numpyro.infer import MCMC, NUTS
-from jax import random, vmap
-import numpy as np
 import jax.numpy as jnp
-import jax
-import matplotlib.pyplot as plt
-import torch
 
-from pydantic import BaseModel
-from pydantic import validator
-from typing import List
-from typing import Union
-from math import factorial
 from nmrmix.nmr import parse_coupled_SimpleSpinSystem, couple_SimpleSpinSystem
 
 
@@ -48,8 +35,9 @@ def render_spect(spin_system, shifts, eval_points, render_width):
     temp_spin_system = spin_system.copy(deep=True)
 
     # insures that the list of shifts provided correspond to the correct couplings
-    # additionally if too many shifts are provided we only take as many as the spin system can handle
-    # (seen later when we use square matricies but have different unmbers of sites per system)
+    # additionally if too many shifts are provided we only take as many as the
+    # spin system can handle (seen later when we use square matricies but have
+    # different unmbers of sites per system)
     for i in range(sites_count):
         temp_spin_system.sites[i].isotropic_chemical_shift = shifts[i]
     couple_SimpleSpinSystem(temp_spin_system)
@@ -63,7 +51,8 @@ def render_spect(spin_system, shifts, eval_points, render_width):
 
     y_sum = (y * updated_intenisities[:, jnp.newaxis]).sum(axis=0)
 
-    # I felt as though I should normalize the output of the spectrum as this will be multiplied by an intensity in model
+    # I felt as though I should normalize the output of the
+    # spectrum as this will be multiplied by an intensity in model
     return y_sum / y_sum.max()
 
 
@@ -72,7 +61,7 @@ def model(
 ):
 
     MIXTURE_COMPONENTS, NUM_POSSIBLE_SHIFTS = pred_shifts_mu.shape
-    EVAL_N = eval_points.shape[0]
+    # EVAL_N = eval_points.shape[0]
     assert len(y) == len(eval_points)
 
     mixture_weights = numpyro.sample(

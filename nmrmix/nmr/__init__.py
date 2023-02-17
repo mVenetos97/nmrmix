@@ -48,13 +48,13 @@ class SimpleCoupling(BaseModel):
 class SimpleSite(BaseModel):
     """
     isotope: specific isotope for NMR active atom
-    isotropic_chemical_shift: value in ppm for chemical shift. 
+    isotropic_chemical_shift: value in ppm for chemical shift.
     Converted to a list when coupled
-    multiplicity: Number of atoms responsible for this signal. 
+    multiplicity: Number of atoms responsible for this signal.
     Irrep in spin system
-    intensity: the relative signal intensity. Taken to be multiplicity 
+    intensity: the relative signal intensity. Taken to be multiplicity
     but updated upon coupling
-    couple_flag: flag to determine if site has been coupled before. 
+    couple_flag: flag to determine if site has been coupled before.
     Present due to issues interfacing mrsimulator with JAX
     """
 
@@ -92,9 +92,9 @@ class SimpleSpinSystem(BaseModel):
     couplings: List[SimpleCoupling] = []
 
 
-##################
-## probably should be class memberfunctions
-#################
+#
+# probably should be class memberfunctions
+#
 
 
 def comb(n, k):
@@ -127,7 +127,7 @@ def Hz_to_ppm(Hz_val, carrier_frequency=500):
 
 def couple_SimpleSpinSystem(SimpleSpinSystem, carrier_frequency=500):
     """
-    Function to update isotropic_chemical_shift values in a site object 
+    Function to update isotropic_chemical_shift values in a site object
     to the list of shifts expected in a coupled spin system
     """
     if len(SimpleSpinSystem.couplings) == 0:
@@ -170,7 +170,7 @@ def couple_SimpleSpinSystem(SimpleSpinSystem, carrier_frequency=500):
 
 def parse_coupled_SimpleSpinSystem(SimpleSpinSystem):
     """
-    Systematically parses a spin system to obtain the frequencies of each signal 
+    Systematically parses a spin system to obtain the frequencies of each signal
     and the associated signal instensity
     """
     shifts = jnp.array([])
